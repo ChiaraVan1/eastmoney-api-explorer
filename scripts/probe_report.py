@@ -1,6 +1,5 @@
 import requests
 import json
-import os
 from pathlib import Path
 
 headers = {
@@ -8,50 +7,57 @@ headers = {
     'Referer': 'https://data.eastmoney.com/',
 }
 
-report_name = os.environ['REPORT_NAME']
-filter_str  = os.environ.get('FILTER', '')
+# 读 workflow 1 生成的报表名清单
+report_names = Path('results/report_names.txt').read_text().splitlines()
+report_names = [r.strip() for r in report_names if r.strip()]
+print(f'共 {len(report_names)} 个报表名，开始探测...\n')
+
+Path('results/report_fields').mkdir(parents=True, exist_ok=True)
 
 url = 'https://datacenter-web.eastmoney.com/api/data/v1/get'
-params = {
-    'reportName': report_name,
-    'columns': 'ALL',
-    'sortTypes': '-1',
-    'source': 'WEB',
-    'client': 'WEB',
-    'pageNumber': '1',
-    'pageSize': '5',  # 只拿5条，够看字段就行
-}
-if filter_str:
-    params['filter'] = filter_str
 
-r = requests.get(url, params=params, headers=headers, timeout=10)
-data = r.json()
+for report_name in report_names:
+    params = {
+        'reportName': report_name,
+        'columns': 'ALL',
+        'sortTypes': '-1',
+        'source': 'WEB',
+        'client': 'WEB',
+        'pageNumber': '1',
+        'pageSize': '5',
+    }
 
-result = {
-    'report_name': report_name,
-    'filter': filter_str,
-    'success': data.get('success'),
-    'message': data.get('message'),
-    'fields': [],
-    'sample': [],
-}
+    result = {
+        'report_name': report_name,
+        'success': False,
+        'message': '',
+        'fields': [],
+        'sample': [],
+    }
 
-if data.get('success') and data.get('result'):
-    rows = data['result'].get('data') or []
-    if rows:
-        result['fields'] = list(rows[0].keys())
-        result['sample'] = rows[:2]  # 保存2条样本
-        print(f'✅ 成功！字段数: {len(result["fields"])}')
-        print('字段列表:')
-        for f in result['fields']:
-            print(f'  {f}')
-    else:
-        print('⚠️ 请求成功但无数据行')
-else:
-    print(f'❌ 失败: {data.get("message")}')
+    try:
+        r = requests.get(url, params=params, headers=headers, timeout=10)
+        data = r.json()
 
-# 保存结果
-Path('results/report_fields').mkdir(parents=True, exist_ok=True)
-out_path = f'results/report_fields/{report_name}.json'
-Path(out_path).write_text(json.dumps(result, indent=2, ensure_ascii=False))
-print(f'\n结果已保存到 {out_path}')
+        result['success'] = data.get('success', False)
+        result['message'] = data.get('message', '')
+
+        if result['success'] and data.get('result'):
+            rows = data['result'].get('data') or []
+            if rows:
+                result['fields'] = list(rows[0].keys())
+                result['sample'] = rows[:2]
+                print(f'✅ {report_name}: {len(result["fields"])} 个字段')
+            else:
+                print(f'⚠️  {report_name}: 请求成功但无数据')
+        else:
+            print(f'❌ {report_name}: {result["message"]}')
+
+    except Exception as e:
+        result['message'] = str(e)
+        print(f'💥 {report_name}: {e}')
+
+    out_path = Path(f'results/report_fields/{report_name}.json')
+    out_path.write_text(json.dumps(result, indent=2, ensure_ascii=False))
+
+print('\n全部完成，结果保存在 results/report_fields/')
