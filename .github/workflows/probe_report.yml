@@ -1,0 +1,42 @@
+name: 2. Probe Report Fields
+
+on:
+  workflow_dispatch:
+    inputs:
+      report_name:
+        description: '报表名，如 RPT_VALUEANALYSIS_DET'
+        required: true
+        type: string
+      filter:
+        description: '过滤条件（可选），如 (SECURITY_CODE="980080")'
+        required: false
+        type: string
+        default: ''
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Probe report
+        env:
+          REPORT_NAME: ${{ inputs.report_name }}
+          FILTER: ${{ inputs.filter }}
+        run: python3 scripts/probe_report.py
+
+      - name: Commit results
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add results/report_fields/
+          git diff --cached --quiet || git commit -m "chore: probe ${{ inputs.report_name }}"
+          git push
