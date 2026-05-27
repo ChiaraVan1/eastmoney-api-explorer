@@ -1,0 +1,31 @@
+name: 1. Discover EastMoney Report Names
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * 1'  # 每周一自动跑一次
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Scan JS files for report names
+        run: python3 scripts/discover_reports.py
+
+      - name: Commit results
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add results/report_names.txt
+          git diff --cached --quiet || git commit -m "chore: update report names $(date +'%Y-%m-%d')"
+          git push
