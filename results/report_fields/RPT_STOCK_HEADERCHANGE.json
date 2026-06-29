@@ -45,7 +45,7 @@
       "HOLDER_SUM_CODE": 0,
       "SALE_LIFT_CODE": 0,
       "CAPSTOCK_STRUCTURE_CODE": 0,
-      "NOTICE_CODE": 0,
+      "NOTICE_CODE": 1,
       "SECUCODE": "000001.SZ",
       "SECURITY_NAME_ABBR": "平安银行",
       "INDUSTRY_NAME": "银行Ⅱ",
