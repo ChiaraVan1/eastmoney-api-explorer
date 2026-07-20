@@ -23,7 +23,13 @@
     "IS_PUBLISH",
     "MARKET",
     "EITIME",
-    "SECUCODE"
+    "SECUCODE",
+    "BOARD_CODE",
+    "BOARD_NAME",
+    "NEW_BOARD_CODE",
+    "INFO_CODE",
+    "APPOINT_CHANGE",
+    "APPOINT_CHANGE_DAYS"
   ],
   "sample": [
     {
@@ -42,12 +48,18 @@
       "TRADE_MARKET": "深交所主板",
       "REPORT_DATE": "2026-06-30 00:00:00",
       "APPOINT_PUBLISH_DATE": "2026-08-15 00:00:00",
-      "RESIDUAL_DAYS": 33,
+      "RESIDUAL_DAYS": 26,
       "REPORT_TYPE_NAME": "2026年 半年报",
       "IS_PUBLISH": "0",
       "MARKET": "0201",
-      "EITIME": "2026-06-30 18:44:30",
-      "SECUCODE": "000001.SZ"
+      "EITIME": "2026-06-30 18:44:35",
+      "SECUCODE": "000001.SZ",
+      "BOARD_CODE": "475",
+      "BOARD_NAME": "银行Ⅱ",
+      "NEW_BOARD_CODE": "BK0475",
+      "INFO_CODE": null,
+      "APPOINT_CHANGE": null,
+      "APPOINT_CHANGE_DAYS": null
     },
     {
       "SECURITY_CODE": "000001",
@@ -69,8 +81,14 @@
       "REPORT_TYPE_NAME": "2026年 一季报",
       "IS_PUBLISH": "1",
       "MARKET": "0201",
-      "EITIME": "2026-03-31 16:50:48",
-      "SECUCODE": "000001.SZ"
+      "EITIME": "2026-03-31 16:50:56",
+      "SECUCODE": "000001.SZ",
+      "BOARD_CODE": "475",
+      "BOARD_NAME": "银行Ⅱ",
+      "NEW_BOARD_CODE": "BK0475",
+      "INFO_CODE": "AN202604241821562498",
+      "APPOINT_CHANGE": null,
+      "APPOINT_CHANGE_DAYS": null
     }
   ]
 }
