@@ -49,7 +49,7 @@
       "TRADE_MARKET": "深交所主板",
       "REPORT_DATE": "2026-06-30 00:00:00",
       "APPOINT_PUBLISH_DATE": "2026-08-15 00:00:00",
-      "RESIDUAL_DAYS": 12,
+      "RESIDUAL_DAYS": 5,
       "REPORT_TYPE_NAME": "2026年 半年报",
       "IS_PUBLISH": "0",
       "MARKET": "0201",
